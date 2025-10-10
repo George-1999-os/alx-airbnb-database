@@ -1,21 +1,17 @@
 -- Initial query: retrieve all bookings with user, property, and payment details
-EXPLAIN ANALYZE
+EXPLAIN
 SELECT 
     b.id AS booking_id,
-    b.start_date,
-    b.end_date,
-    u.id AS user_id,
     u.first_name,
     u.last_name,
-    u.email,
-    p.id AS property_id,
     p.name AS property_name,
-    p.location,
-    NULL AS payment_amount,  -- placeholder
-    NULL AS payment_date     -- placeholder
+    pay.amount AS payment_amount,
+    pay.status AS payment_status
 FROM bookings b
 JOIN users u ON b.user_id = u.id
-JOIN properties p ON b.property_id = p.id;
+JOIN properties p ON b.property_id = p.id
+JOIN payments pay ON pay.booking_id = b.id
+WHERE pay.status = 'Completed' AND b.start_date >= '2025-01-01';
 
 -- Optimized query (refactored)
 EXPLAIN ANALYZE
